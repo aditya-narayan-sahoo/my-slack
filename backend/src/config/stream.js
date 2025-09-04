@@ -1,6 +1,9 @@
 import ENV from "./env.js";
 import { StreamChat } from "stream-chat";
 
+if (!ENV.STREAM_API_KEY || !ENV.STREAM_API_SECRET) {
+  throw new Error("STREAM_API_KEY/STREAM_API_SECRET are required");
+}
 const streamClient = new StreamChat(ENV.STREAM_API_KEY, ENV.STREAM_API_SECRET);
 
 /**

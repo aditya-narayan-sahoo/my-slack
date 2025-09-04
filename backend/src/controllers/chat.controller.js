@@ -1,19 +1,33 @@
 import { generateStreamToken } from "../config/stream.js";
 
 /**
- * Returns a Stream token for the currently authenticated user.
+ * Generates a Stream token for the user.
  *
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {Promise<void>} Resolves with a JSON response containing the Stream token
- * @throws If there is an error generating the Stream token, a 500 error is thrown
+ * @param {import("express").Request} req Express request object
+ * @param {import("express").Response} res Express response object
+ *
+ * @returns {import("express").Response} The response object with
+ * the generated Stream token.
+ *
+ * @throws {Error} If there was an error generating the Stream token
  */
 export const getStreamToken = (req, res) => {
   try {
-    const token = generateStreamToken(req.auth().userId);
-    res.status(200).json({ token });
+    const auth = req.auth?.();
+    const userId = auth?.userId;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const token = generateStreamToken(userId);
+    if (!token) {
+      return res
+        .status(500)
+        .json({ message: "Failed to generate Stream token" });
+    }
+    res.set("Cache-Control", "no-store");
+    return res.status(200).json({ token });
   } catch (error) {
-    console.log(`Error generating Stream token: ${error}`);
-    res.status(500).json({ message: "Failed to generate Stream token" });
+    console.error("Error generating Stream token", error);
+    return res.status(500).json({ message: "Failed to generate Stream token" });
   }
 };

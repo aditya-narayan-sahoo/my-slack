@@ -4,8 +4,8 @@
   "description": "backend for my-slack",
   "main": "src/server.js",
   "scripts": {
-    "dev": "NODE_OPTIONS='--import ./instrument.mjs' nodemon src/server.js",
-    "start": "NODE_OPTIONS='--import ./instrument.mjs' node src/server.js"
+    "dev": "cross-env NODE_OPTIONS=\"--import ./instrument.mjs\" nodemon src/server.js",
+    "start": "cross-env NODE_OPTIONS=\"--import ./instrument.mjs\" node src/server.js"
   },
   "author": "Aditya Narayan Sahoo",
   "license": "ISC",

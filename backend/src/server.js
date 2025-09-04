@@ -19,9 +19,11 @@ app.get("/", (req, res) => {
   res.send("Hello from the backend");
 });
 
-app.get("/debug-sentry", (req, res) => {
-  throw new Error("My first Sentry error!");
-});
+if (ENV.NODE_ENV !== "production") {
+  app.get("/debug-sentry", (req, res) => {
+    throw new Error("My first Sentry error!");
+  });
+}
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
